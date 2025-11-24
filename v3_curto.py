@@ -1,3 +1,5 @@
+# Esse programa utiliza o .npz gerado pelo calibrar_camera.py e as fotos já salvas background.jpg e person.jpg para gerar uma versão undistorced delas
+
 import cv2
 import numpy as np
 
@@ -83,3 +85,4 @@ height_m = h * scale_m_per_px
 print("\n================ RESULTADO CRU (V3 UNDISTORT) ================")
 print(f"Altura estimada: {height_m:.3f} m")
 print("==============================================================")
+
