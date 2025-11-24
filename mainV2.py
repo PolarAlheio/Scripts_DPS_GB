@@ -1,3 +1,5 @@
+# Versão bagual e refinada do projeto
+
 import cv2
 import numpy as np
 import serial
@@ -248,3 +250,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
