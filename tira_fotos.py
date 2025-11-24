@@ -1,3 +1,6 @@
+# Esse programa simplesmente tira até 20 fotos de calibração, com o xadrez 10x7, que serão utilizadas depois no calibrar_camera.py para gerar o arquivo .npz
+# Também pode ser usado o verifica_xadrez.py para verificar em quais fotos o xadrez está sendo identificado
+
 import cv2
 import sys
 import os
@@ -66,3 +69,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
