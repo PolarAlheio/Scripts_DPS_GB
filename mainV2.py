@@ -1,40 +1,11 @@
-# Versão bagual e refinada do projeto
-
 import cv2
 import numpy as np
-import serial
-import serial.tools.list_ports
-import time
+import winsound
 
-DELAY = 10
+DELAY = 12 # Tempo para a pessoa se posicionar em frente à câmera
 
 ARUCO_DICT = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_5X5_50)
 TAG_REAL_HEIGHT_M = 0.15  # 150 mm
-
-def escolher_porta_serial():
-    # Lista todas as portas disponíveis
-    portas = list(serial.tools.list_ports.comports())
-
-    if not portas:
-        print("Nenhuma porta COM encontrada.")
-        return None
-
-    print("\nPortas COM disponíveis:")
-    for i, porta in enumerate(portas):
-        print(f"[{i}] {porta.device} - {porta.description}")
-
-    # Solicita a escolha do usuário
-    while True:
-        try:
-            escolha = int(input("\nSelecione o número da porta desejada: "))
-            if 0 <= escolha < len(portas):
-                porta_escolhida = portas[escolha].device
-                print(f"\nPorta selecionada: {porta_escolhida}")
-                return porta_escolhida
-            else:
-                print("Número inválido. Tente novamente.")
-        except ValueError:
-            print("Entrada inválida. Digite apenas o número da porta.")
             
 def detect_aruco_height(frame):
     corners, ids, _ = cv2.aruco.detectMarkers(frame, ARUCO_DICT)
@@ -111,6 +82,7 @@ def capturar_frame(mensagem, tecla, nome_arquivo, camera):
             #time.sleep(5)
             # Captura final após o delay
             ret, frame = camera.read()
+            winsound.Beep(1000, 500) # Som para notificar a captura do frame
             if ret:
                 cv2.imwrite(nome_arquivo, frame)
                 print(f"{nome_arquivo} salvo com sucesso.")
@@ -166,7 +138,6 @@ def gerar_mascara_pessoa(frame_fundo, frame_pessoa):
 
 
 def main():
-    porta = escolher_porta_serial()
     camera = cv2.VideoCapture(0)
 
     try:
@@ -204,15 +175,6 @@ def main():
 
         print("Imagens salvas: diff_gaussian.jpg, mask.jpg e resultado_branco.jpg")
         
-        if porta:
-            try:
-                # Ajuste a velocidade conforme necessário (ex: 9600, 115200 etc.)
-                with serial.Serial(porta, 9600, timeout=1) as arduino:
-                    print("Conectado ao Arduino. Enviando beep...")
-                    time.sleep(2)
-                    arduino.write(b'BEEP\n')  # exemplo de comando
-            except serial.SerialException as e:
-                print(f"Erro ao abrir a porta serial: {e}")
                 
         # --- Detectar ArUco ---
         tag_h_px, img_tag = detect_aruco_height(combined.copy())
@@ -250,4 +212,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
